@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
 
+'''Run build_pipeline'''
+
 from xtsv import build_pipeline, parser_skeleton, jnius_config
 
 
 def main():
+    '''Main'''
 
     argparser = parser_skeleton(
         description='compound - add compound boundaries to lemma')
@@ -22,18 +25,18 @@ def main():
     presets = []
 
     compound = (
-        'compound', # module name
-        'Compound', # class
-        'add compound boundaries to lemma', # friendly name used in REST form
-        (), # args
+        'compound',  # module name
+        'Compound',  # class
+        'add compound boundaries to lemma',  # friendly name used in REST form
+        (),  # args
         {
-            'source_fields': {'form','anas','xpostag'},
+            'source_fields': {'form', 'anas', 'xpostag'},
             'target_fields': ['compound']
-        } # kwargs
+        }  # kwargs
     )
     tools = [
-        (compound, # config
-            ('compound', 'emCompound') # aliases
+        (compound,  # config
+            ('compound', 'emCompound')  # aliases
         )
     ]
 

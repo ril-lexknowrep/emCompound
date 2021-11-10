@@ -4,6 +4,7 @@ Class representing words.
 
 from types import SimpleNamespace
 
+
 class Word(SimpleNamespace):
     """Represent emtsv columns as object attributes"""
 
