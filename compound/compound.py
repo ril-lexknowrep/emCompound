@@ -34,6 +34,8 @@ class Compound:
         self.source_fields = {'anas', 'xpostag'}
         self.target_fields = ['compound']
         self.false_dict = load_non_compounds('non_compounds.txt')
+        self.cache = {}
+        # TODO: cache kiírása munkamenet végén (__main__.py ?) és betöltése
 
     def process_sentence(self, sen, _):
         """
@@ -43,8 +45,34 @@ class Compound:
         """
         for tok in sen:
             wd = Word(tok)
+            wd_pos = get_pos(wd.xpostag)
+
+            # Retrieve from cache
+            cached_data = self.cache.get(wd.lemma + wd_pos)
+            if cached_data:
+                boundary_lists, preverb_flag = cached_data
+
+                # Mit kerestünk ki a cache-ből?
+                # print("Cache:", wd.lemma + wd_pos, cached_data)
+                if boundary_lists != [[]]:
+                    cached_compounds = []
+                    for boundaries in boundary_lists:
+                        cached_compounds.append('#'.
+                                         join(split_at(wd.lemma, boundaries)))
+                    tok.append(', '.join(cached_compounds))
+                    if preverb_flag:
+                        tok[self.xpostag_index] = PREVERB_POSTAG + wd.xpostag
+                else:
+                    tok.append(wd.lemma)
+                continue
 
             # Handle verbs with preverbs
+            # TODO: áttenni a connec_prev-ből ide a '[/Prev]' címke beszúrását
+            # az xpostag mezőbe. A nem igei igekötős összetételeknél
+            # (ki#adás, haza#vonuló) lentebb ez már megtörténik.
+            # A connect_prev-ben most nem tudom/akarom megcsinálni a
+            # nyitott PR-ek miatt.
+
             if PREVERB_POSTAG in wd.anas and VERB_POSTAG in wd.xpostag:
                 for ana in json.loads(wd.anas):
                     if ana["lemma"] == wd.lemma and ana["tag"] == wd.xpostag:
@@ -52,21 +80,21 @@ class Compound:
                 if PREVERB_POSTAG in last_good_ana['morphana']:
                     preverb = last_good_ana['readable'].split(' + ')[0].\
                                     replace(PREVERB_POSTAG, '')
-                    tok.append(wd.lemma.replace(preverb, preverb + '#', 1))
+                    boundaries = [len(preverb)]
+                    tok.append('#'.join(split_at(wd.lemma, boundaries)))
+                    # Ha a fenti TODO elkészül: (boundaries, True)
+                    # és tok[self.xpostag_index] = PREVERB_POSTAG + wd.xpostag
+                    self.cache[wd.lemma + wd_pos] = ([boundaries], False)
                 else:
                     tok.append(wd.lemma)
-
-            # TODO: áttenni a connec_prev-ből ide a '[/Prev]' címke beszúrását
-            # az xpostag mezőbe. A nem igei igekötős összetételeknél
-            # (ki#adás, haza#vonuló) lentebb ez már megtörténik.
-            # A connect_prev-ben most nem tudom/akarom megcsinálni a
-            # folyamatban lévő PR-ek miatt.
+                    self.cache[wd.lemma + wd_pos] = ([[]], False)
 
             # Handle other potential compounds
             elif (regex.search(BOUNDARY_REGEX, wd.anas) and
                   ROMAN_NUMBER_POSTAG not in wd.xpostag and
                   ARABIC_NUMBER_POSTAG not in wd.xpostag):
                 relevant_anas = []
+                preverb_flag = False
 
                 for ana in json.loads(wd.anas):
                     if (ana["lemma"] == wd.lemma
@@ -75,6 +103,7 @@ class Compound:
                 if not any(regex.search(BOUNDARY_REGEX, ana['morphana'])
                            for ana in relevant_anas):
                     tok.append(wd.lemma)
+                    self.cache[wd.lemma + wd_pos] = ([[]], False)
                     continue
 
                 compound_analyses = []
@@ -92,6 +121,7 @@ class Compound:
                     if (morphemes[0]['mtag'] == PREVERB_POSTAG
                       and not wd.xpostag.startswith(PREVERB_POSTAG)):
                         tok[self.xpostag_index] = PREVERB_POSTAG + wd.xpostag
+                        preverb_flag = True
 
                     previous_component = ''
 
@@ -138,23 +168,27 @@ class Compound:
                             add_flag = False
                             break
                         if comp_ana['boundaries'] < boundaries:
-                            comp_ana['c_lemma'] = '#'.join(split_at(comp_lemma,
-                                                    sorted(list(boundaries))))
                             comp_ana['boundaries'] = boundaries
                             add_flag = False
 
                     if add_flag:
-                        compound_analyses.append(
-                            {'c_lemma': '#'.join(split_at(comp_lemma,
-                                                 sorted(list(boundaries)))),
-                             'boundaries': boundaries})
+                        compound_analyses.append({'boundaries': boundaries})
 
-                tok.append(', '.join([comp_ana['c_lemma']
-                                      for comp_ana in compound_analyses]))
+                sorted_boundaries = [sorted(list(comp_ana['boundaries']))
+                                     for comp_ana in compound_analyses]
+                tok.append(', '.join(['#'.join(split_at(comp_lemma, sb))
+                                      for sb in sorted_boundaries]))
+                self.cache[wd.lemma + wd_pos] =\
+                                    (sorted_boundaries, preverb_flag)
 
-            # Handle non-compound
+            # Handle non-compounds
             else:
                 tok.append(wd.lemma)
+                # Úgy sejtem, ezeket nem érdemes cache-elni, mert idáig
+                # gyorsan eljut a futás, de érdemes lehet tesztelni
+                # a memória-sebesség tradeoffot nagy fájlokon, és
+                # ha igen, akkor:
+                # self.cache[wd.lemma + wd_pos] = ([[]], False)
 
         return sen
 
@@ -187,6 +221,12 @@ def load_non_compounds(file_name):
     return false_dict
 
 
+def get_pos(postag):
+    s = regex.search(f'\[/.+?]', postag)
+    if s:
+        return s[0]
+    return ''
+
 def split_at(in_list, indices):
     '''Split in_list at indices into sublists'''
 
@@ -199,7 +239,7 @@ def split_at(in_list, indices):
                          "without duplicates")
 
     if indices[-1] >= len(in_list):
-        raise IndexError(f"index beyond bounds: {indices[-1]}")
+        raise IndexError(f"index beyond bounds: {indices[-1]} in {in_list}")
 
     return_list = []
     start_index = 0
