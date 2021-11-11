@@ -30,7 +30,7 @@ def main():
         'add compound boundaries to lemma',  # friendly name used in REST form
         (),  # args
         {
-            'source_fields': {'form', 'anas', 'xpostag'},
+            'source_fields': {'anas', 'xpostag', 'lemma'},
             'target_fields': ['compound']
         }  # kwargs
     )

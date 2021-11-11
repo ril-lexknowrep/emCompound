@@ -5,6 +5,7 @@
 An emtsv module to extract compound boundaries using morph and pos output.
 """
 
+import os
 from collections import defaultdict
 import json
 import regex
@@ -31,9 +32,10 @@ class Compound:
         # adná át, de nem látom be, hogy miért kellene fájlok között ugrálnom,
         # hogy megtudjam, mik a használt mezők, ezért csak azért is így
         # inicializálom őket.
-        self.source_fields = {'anas', 'xpostag'}
+        self.source_fields = {'anas', 'xpostag', 'lemma'}
         self.target_fields = ['compound']
-        self.false_dict = load_non_compounds('non_compounds.txt')
+        self.false_dict = load_non_compounds(os.path.dirname(__file__) +
+                                             '/non_compounds.txt')
         self.cache = {}
         # TODO: cache kiírása munkamenet végén (__main__.py ?) és betöltése
 
