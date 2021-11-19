@@ -69,12 +69,12 @@ class Compound:
                 continue
 
             # Handle verbs with preverbs
-            # TODO: áttenni a connec_prev-ből ide a '[/Prev]' címke beszúrását
-            # az xpostag mezőbe. A nem igei igekötős összetételeknél
+            #
+            # Áttenni a connec_prev-ből ide a '[/Prev]' címke beszúrását
+            # az xpostag mezőbe. Nem szükséges.
+            # -> https://github.com/ril-lexknowrep/feladatok/issues/10#issuecomment-974027572
+            # A nem igei igekötős összetételeknél
             # (ki#adás, haza#vonuló) lentebb ez már megtörténik.
-            # A connect_prev-ben most nem tudom/akarom megcsinálni a
-            # nyitott PR-ek miatt.
-
             if PREVERB_POSTAG in wd.anas and VERB_POSTAG in wd.xpostag:
                 for ana in json.loads(wd.anas):
                     if ana["lemma"] == wd.lemma and ana["tag"] == wd.xpostag:
