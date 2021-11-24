@@ -19,4 +19,7 @@ OUTFILE=$O/$(FILE).compound
 
 
 analyse_compounds:
-	cat $(INFILE) | python3 $(MODULE) > $(OUTFILE)
+	cat $(INFILE) | python3 $(MODULE) | sed "s/	$$/	./" > $(OUTFILE)
+# using a sed hack for patch xtsv
+# not to strip empty fields at the end of line
+

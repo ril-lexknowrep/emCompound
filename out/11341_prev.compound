@@ -312,7 +312,7 @@ illant	" "	[{"lemma": "illan", "tag": "[/V][Pst.NDef.3Sg]", "morphana": "illan[/
 el	" "	[{"lemma": "el", "tag": "[/Prev]", "morphana": "el[/Prev]=el", "readable": "el[/Prev]", "twolevel": "e:e l:l :[/Prev]"}]	el	[/Prev]	el
 hazul	""	[]	hazul	[/V][Prs.NDef.3Sg]	hazul
 �	""	[]	�	[/Adj][Nom]	�
-ról	""	[]		[/N][Del]	
+ról	""	[]		[/N][Del]	.
 ,	" "	[{"lemma": ",", "tag": "[Punct]", "morphana": "", "readable": "", "twolevel": ""}]	,	[Punct]	,
 hogy	" "	[{"lemma": "ahogy", "tag": "[/Adv|Pro|Rel]", "morphana": "ahogy[/Adv|Pro|Rel]=hogy", "readable": "ahogy[/Adv|Pro|Rel]=hogy", "twolevel": "h:a o:h g:o y:g :y :[/Adv|Pro|Rel]"}, {"lemma": "hogy", "tag": "[/Adv|Pro|Int]", "morphana": "hogy[/Adv|Pro|Int]=hogy", "readable": "hogy[/Adv|Pro|Int]", "twolevel": "h:h o:o g:g y:y :[/Adv|Pro|Int]"}, {"lemma": "hogy", "tag": "[/Cnj]", "morphana": "hogy[/Cnj]=hogy", "readable": "hogy[/Cnj]", "twolevel": "h:h o:o g:g y:y :[/Cnj]"}]	hogy	[/Cnj]	hogy
 senki	" "	[{"lemma": "senki", "tag": "[/N][Nom]", "morphana": "senki[/N]=senki+[Nom]=", "readable": "senki[/N] + [Nom]", "twolevel": "s:s e:e n:n k:k i:i :[/N] :[Nom]"}, {"lemma": "senki", "tag": "[/N|Pro][Nom]", "morphana": "senki[/N|Pro]=senki+[Nom]=", "readable": "senki[/N|Pro] + [Nom]", "twolevel": "s:s e:e n:n k:k i:i :[/N|Pro] :[Nom]"}]	senki	[/N|Pro][Nom]	senki
@@ -2802,7 +2802,7 @@ oda	""	[{"lemma": "oda", "tag": "[/Adv|Pro]", "morphana": "oda[/Adv|Pro]=oda", "
 
 Cecey	""	[]	Cecey	[/N][Nom]	Cecey
 �	""	[]	�	[/Num|Digit][Nom]	�
-hez	" "	[]		[/N][All]	
+hez	" "	[]		[/N][All]	.
 sietett	""	[{"lemma": "siet", "tag": "[/V][Pst.NDef.3Sg]", "morphana": "siet[/V]=siet+ett[Pst.NDef.3Sg]=ett", "readable": "siet[/V] + ett[Pst.NDef.3Sg]", "twolevel": "s:s i:i e:e t:t :[/V] e:e t:t t:t :[Pst.NDef.3Sg]"}, {"lemma": "sietett", "tag": "[/Adj][Nom]", "morphana": "siet[/V]=siet+ett[_PerfPtcp/Adj]=ett+[Nom]=", "readable": "siet[/V] + ett[_PerfPtcp/Adj] + [Nom]", "twolevel": "s:s i:i e:e t:t :[/V] e:e t:t t:t :[_PerfPtcp/Adj] :[Nom]"}]	siet	[/V][Pst.NDef.3Sg]	siet
 .	"\n"	[{"lemma": ".", "tag": "[Punct]", "morphana": "", "readable": "", "twolevel": ""}]	.	[Punct]	.
 
@@ -7774,7 +7774,7 @@ rotyogott	" "	[{"lemma": "rotyog", "tag": "[/V][Pst.NDef.3Sg]", "morphana": "rot
 az	" "	[{"lemma": "az", "tag": "[/Det|Art.Def]", "morphana": "az[/Det|Art.Def]=az", "readable": "az[/Det|Art.Def]", "twolevel": "a:a z:z :[/Det|Art.Def]"}, {"lemma": "az", "tag": "[/Det|Pro][Nom]", "morphana": "az[/Det|Pro]=az+[Nom]=", "readable": "az[/Det|Pro] + [Nom]", "twolevel": "a:a z:z :[/Det|Pro] :[Nom]"}, {"lemma": "az", "tag": "[/N|Pro][Nom]", "morphana": "az[/N|Pro]=az+[Nom]=", "readable": "az[/N|Pro] + [Nom]", "twolevel": "a:a z:z :[/N|Pro] :[Nom]"}]	az	[/Det|Art.Def]	az
 üstökben	" "	[{"lemma": "üst", "tag": "[/N][Pl][Ine]", "morphana": "üst[/N]=üst+ök[Pl]=ök+ben[Ine]=ben", "readable": "üst[/N] + ök[Pl] + ben[Ine]", "twolevel": "ü:ü s:s t:t :[/N] ö:ö k:k :[Pl] b:b e:e n:n :[Ine]"}, {"lemma": "üstök", "tag": "[/N][Ine]", "morphana": "üstök[/N]=üstök+ben[Ine]=ben", "readable": "üstök[/N] + ben[Ine]", "twolevel": "ü:ü s:s t:t ö:ö k:k :[/N] b:b e:e n:n :[Ine]"}]	üstök	[/N][Ine]	üstök
 és	" "	[{"lemma": "és", "tag": "[/Cnj]", "morphana": "és[/Cnj]=és", "readable": "és[/Cnj]", "twolevel": "é:é s:s :[/Cnj]"}]	és	[/Cnj]	és
-kon	""	[]		[/N][Pl][Supe]	
+kon	""	[]		[/N][Pl][Supe]	.
 �	""	[]	�	[/Adj][Nom]	�
 dérokban	" "	[]	dér	[/N][Pl][Ine]	dér
 a	" "	[{"lemma": "a", "tag": "[/Det|Art.Def]", "morphana": "a[/Det|Art.Def]=a", "readable": "a[/Det|Art.Def]", "twolevel": "a:a :[/Det|Art.Def]"}, {"lemma": "a", "tag": "[/Det|Pro|(Post)]", "morphana": "a[/Det|Pro|(Post)]=a", "readable": "a[/Det|Pro|(Post)]", "twolevel": "a:a :[/Det|Pro|(Post)]"}, {"lemma": "a", "tag": "[/N][Nom]", "morphana": "a[/N|Ltr]=a+[Nom]=", "readable": "a[/N|Ltr] + [Nom]", "twolevel": "a:a :[/N|Ltr] :[Nom]"}, {"lemma": "a", "tag": "[/N|Pro|(Post)][Nom]", "morphana": "a[/N|Pro|(Post)]=a+[Nom]=", "readable": "a[/N|Pro|(Post)] + [Nom]", "twolevel": "a:a :[/N|Pro|(Post)] :[Nom]"}]	a	[/Det|Art.Def]	a
@@ -8725,7 +8725,7 @@ cigánynyelven	""	[]	cigánynyelve	[/N][Supe]	cigánynyelve
 ,	" "	[{"lemma": ",", "tag": "[Punct]", "morphana": "", "readable": "", "twolevel": ""}]	,	[Punct]	,
 Sárközi	""	[{"lemma": "Sárközi", "tag": "[/N][Nom]", "morphana": "Sárközi[/N]=Sárközi+[Nom]=", "readable": "Sárközi[/N] + [Nom]", "twolevel": "S:S á:á r:r k:k ö:ö z:z i:i :[/N] :[Nom]"}, {"lemma": "sárközi", "tag": "[/Adj][Nom]", "morphana": "sár[/N]=sár+köz[/N]=köz+i[_Adjz:i/Adj]=i+[Nom]=", "readable": "sár[/N] + köz[/N] + i[_Adjz:i/Adj] + [Nom]", "twolevel": "s:s á:á r:r :[/N] k:k ö:ö z:z :[/N] i:i :[_Adjz:i/Adj] :[Nom]"}, {"lemma": "sárközi", "tag": "[/Adj][Nom]", "morphana": "sár[/N]=sár+közi[/Adj]=közi+[Nom]=", "readable": "sár[/N] + közi[/Adj] + [Nom]", "twolevel": "s:s á:á r:r :[/N] k:k ö:ö z:z i:i :[/Adj] :[Nom]"}]	Sárközi	[/N][Nom]	Sárközi
 �	""	[]	�	[/N][Nom]	�
-vel	""	[]		[/N][Ins]	
+vel	""	[]		[/N][Ins]	.
 ,	" "	[{"lemma": ",", "tag": "[Punct]", "morphana": "", "readable": "", "twolevel": ""}]	,	[Punct]	,
 a	" "	[{"lemma": "a", "tag": "[/Det|Art.Def]", "morphana": "a[/Det|Art.Def]=a", "readable": "a[/Det|Art.Def]", "twolevel": "a:a :[/Det|Art.Def]"}, {"lemma": "a", "tag": "[/Det|Pro|(Post)]", "morphana": "a[/Det|Pro|(Post)]=a", "readable": "a[/Det|Pro|(Post)]", "twolevel": "a:a :[/Det|Pro|(Post)]"}, {"lemma": "a", "tag": "[/N][Nom]", "morphana": "a[/N|Ltr]=a+[Nom]=", "readable": "a[/N|Ltr] + [Nom]", "twolevel": "a:a :[/N|Ltr] :[Nom]"}, {"lemma": "a", "tag": "[/N|Pro|(Post)][Nom]", "morphana": "a[/N|Pro|(Post)]=a+[Nom]=", "readable": "a[/N|Pro|(Post)] + [Nom]", "twolevel": "a:a :[/N|Pro|(Post)] :[Nom]"}]	a	[/Det|Art.Def]	a
 ragyás	" "	[{"lemma": "ragyás", "tag": "[/Adj][Nom]", "morphana": "ragya[/N]=ragyá+s[_Adjz:s/Adj]=s+[Nom]=", "readable": "ragya[/N]=ragyá + s[_Adjz:s/Adj] + [Nom]", "twolevel": "r:r a:a g:g y:y á:a :[/N] s:s :[_Adjz:s/Adj] :[Nom]"}, {"lemma": "ragyás", "tag": "[/N][Nom]", "morphana": "ragya[/N]=ragyá+s[_Nz:s/N]=s+[Nom]=", "readable": "ragya[/N]=ragyá + s[_Nz:s/N] + [Nom]", "twolevel": "r:r a:a g:g y:y á:a :[/N] s:s :[_Nz:s/N] :[Nom]"}, {"lemma": "ragyás", "tag": "[/Adj][Nom]", "morphana": "ragyás[/Adj]=ragyás+[Nom]=", "readable": "ragyás[/Adj] + [Nom]", "twolevel": "r:r a:a g:g y:y á:á s:s :[/Adj] :[Nom]"}]	ragyás	[/N][Nom]	ragyás
