@@ -9,7 +9,7 @@ def main():
     '''Main'''
 
     argparser = parser_skeleton(
-        description='compound - add compound boundaries to lemma')
+        description='EmCompound - add compound boundaries to lemma')
     opts = argparser.parse_args()
 
     jnius_config.classpath_show_warning = opts.verbose
@@ -24,9 +24,9 @@ def main():
     used_tools = ['compound']
     presets = []
 
-    compound = (
-        'compound',  # module name
-        'Compound',  # class
+    em_compound = (
+        'emCompound',  # module name
+        'EmCompound',  # class
         'add compound boundaries to lemma',  # friendly name used in REST form
         (),  # args
         {
@@ -35,7 +35,7 @@ def main():
         }  # kwargs
     )
     tools = [
-        (compound,  # config
+        (em_compound,  # config
             ('compound', 'emCompound')  # aliases
         )
     ]
