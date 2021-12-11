@@ -29,19 +29,19 @@ pip install ./dist/emCompound-*-py3-none-any.whl
 
 ## Python package release
 
-1. Check `emPreverb/version.py`.
+1. Check `emCompound/version.py`.
 2. `make release-major` or `make release-minor` or `make release-patch`.\
    This will update the version number appropriately make a `git commit` with a new `git` TAG.
-3. `make` to recreate the package with the new tag in `dist/emPreverb-TAG-py3-none-any.whl`.
-4. Go to `https://github.com/THISUSER/emPreverb` and _"Create release from tag"_.
-5. Add wheel file from `dist/emPreverb-TAG-py3-none-any.whl` manually to the release.
+3. `make` to recreate the package with the new tag in `dist/emCompound-TAG-py3-none-any.whl`.
+4. Go to `https://github.com/THISUSER/emCompound` and _"Create release from tag"_.
+5. Add wheel file from `dist/emCompound-TAG-py3-none-any.whl` manually to the release.
 
 ## Add the released package to `emtsv`
 
 1. Install [`emtsv`](https://github.com/nytud/emtsv/blob/master/docs/installation.md): 1st and 2nd point + `cython` only.
 2. Go to the `emtsv` directory (`cd emtsv`).
 1. Add `emCompound` by adding this line to `requirements.txt`:\
-   `https://github.com/THISUSER/emPreverb/releases/download/vTAG/emCompound-TAG-py3-none-any.whl`
+   `https://github.com/THISUSER/emCompound/releases/download/vTAG/emCompound-TAG-py3-none-any.whl`
 2. Complete `config.py` by adding `em_compound` and `tools` from `emCompound/__main__.py` appropriately.
 3. Complete `emtsv` installation by `make venv`.
 4. `echo "Megtörtént volna a kutyasétáltatás." | venv/bin/python3 ./main.py tok,morph,pos > old`
