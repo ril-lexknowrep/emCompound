@@ -9,7 +9,8 @@ import os
 from collections import defaultdict
 import json
 import regex
-from word import Word
+
+from types import SimpleNamespace
 
 
 BOUNDARY_REGEX = r"\+\w+\[/"
@@ -20,7 +21,51 @@ ROMAN_NUMBER_POSTAG = 'Roman'
 ARABIC_NUMBER_POSTAG = 'Digit'
 
 
-class Compound:
+class Word(SimpleNamespace):
+    """
+    Convenience class to access predefined word features as attributes.
+    Set Word.features = ... before using this class!
+    The class is iterable, so a list of all feature values can be accessed
+    by calling list(w) on an object w of class Word.
+    """
+
+    features = []
+
+    def __init__(self, vals):
+        if len(vals) != len(self.features):
+            raise RuntimeError(
+                f"{len(self.features)} values expected, {len(vals)} provided:\n"
+                + "Features: " + str(self.features) + "\n"
+                + "Values: " + str(vals))
+        super().__init__(**dict(zip(self.features, vals)))
+
+#    def as_list(self): # XXX best practice? can I define list(...) for this class?
+#        return self.__dict__.values()
+#
+#   a list(...) definiálása úgy történik, hogy iterálhatóként definiáljuk az
+#   osztályt, ehhez az __iter__ és a __next__ metódust kell implementálni.
+#   Ha ez megtörtént, akkor már hívható a wd = Word(tok) objektumra a list(wd),
+#   ami a kívánt eredményt adja.
+#   Azt viszont nem tudom, hogy ez-e a helyes, pythonic gyakorlat. Mindenesetre
+#   szerintem se rosszabb, mint az as_list metódus.
+#   Ettől függetlenül az as_list implementációja (vagy a neve) így nem szerencsés,
+#   mert a values() metódus nem listát ad vissza. Ahhoz, hogy lista legyen, az
+#   kellene, hogy return list(self.__dict__.values())
+
+    def __iter__(self):
+        self._iter_index = 0
+        return self
+
+    def __next__(self):
+        if self._iter_index < len(self.features):
+            return_value = self.__dict__[self.features[self._iter_index]]
+            self._iter_index += 1
+            return return_value
+        else:
+            raise StopIteration
+
+
+class EmCompound:
     '''Required by xtsv.'''
 
     def __init__(self, *_, source_fields=None, target_fields=None):
@@ -28,12 +73,17 @@ class Compound:
         Required by xtsv.
         Initialise the module.
         """
-        # Tudom, hogy ezeket elvileg a source_fields és a target_fields
-        # adná át, de nem látom be, hogy miért kellene fájlok között ugrálnom,
-        # hogy megtudjam, mik a használt mezők, ezért csak azért is így
-        # inicializálom őket.
-        self.source_fields = {'anas', 'xpostag', 'lemma'}
-        self.target_fields = ['compound']
+
+        # Field names for xtsv (the code below is mandatory for an xtsv module)
+        if source_fields is None:
+            source_fields = set()
+
+        if target_fields is None:
+            target_fields = []
+
+        self.source_fields = source_fields
+        self.target_fields = target_fields
+
         self.false_dict = load_non_compounds(os.path.dirname(__file__) +
                                              '/non_compounds.txt')
         self.cache = {}
@@ -45,8 +95,11 @@ class Compound:
         Process one sentence per function call.
         :return: sen object augmented with output field values for each token
         """
+
+        return_sen = list()
+
         for tok in sen:
-            wd = Word(tok)
+            wd = Word(tok + [''] * len(self.target_fields))
             wd_pos = get_pos(wd.xpostag)
 
             # Retrieve from cache
@@ -61,21 +114,18 @@ class Compound:
                     for boundaries in boundary_lists:
                         cached_compounds.append('#'.
                                          join(split_at(wd.lemma, boundaries)))
-                    tok.append(', '.join(cached_compounds))
-                    if preverb_flag:
-                        tok[self.xpostag_index] = PREVERB_POSTAG + wd.xpostag
+                    wd.compound = ', '.join(cached_compounds)
+#                    if preverb_flag:
+#                        tok[self.xpostag_index] = PREVERB_POSTAG + wd.xpostag
                 else:
-                    tok.append(wd.lemma)
+                    wd.compound = wd.lemma
+                return_sen.append(list(wd))
                 continue
 
             # Handle verbs with preverbs
             #
-            # Áttenni a connec_prev-ből ide a '[/Prev]' címke beszúrását
-            # az xpostag mezőbe. Nem szükséges.
-            # -> https://github.com/ril-lexknowrep/feladatok/issues/10#issuecomment-974027572
-            # A nem igei igekötős összetételeknél
-            # (ki#adás, haza#vonuló) lentebb ez már megtörténik.
-            if PREVERB_POSTAG in wd.anas and VERB_POSTAG in wd.xpostag:
+            if (PREVERB_POSTAG in wd.anas and VERB_POSTAG in wd.xpostag
+                and VERB_POSTAG in wd.anas):
                 for ana in json.loads(wd.anas):
                     if ana["lemma"] == wd.lemma and ana["tag"] == wd.xpostag:
                         last_good_ana = ana
@@ -83,12 +133,10 @@ class Compound:
                     preverb = last_good_ana['readable'].split(' + ')[0].\
                                     replace(PREVERB_POSTAG, '')
                     boundaries = [len(preverb)]
-                    tok.append('#'.join(split_at(wd.lemma, boundaries)))
-                    # Ha a fenti TODO elkészül: (boundaries, True)
-                    # és tok[self.xpostag_index] = PREVERB_POSTAG + wd.xpostag
+                    wd.compound = '#'.join(split_at(wd.lemma, boundaries))
                     self.cache[wd.lemma + wd_pos] = ([boundaries], False)
                 else:
-                    tok.append(wd.lemma)
+                    wd.compound = wd.lemma
                     self.cache[wd.lemma + wd_pos] = ([[]], False)
 
             # Handle other potential compounds
@@ -104,8 +152,9 @@ class Compound:
                         relevant_anas.append(ana)
                 if not any(regex.search(BOUNDARY_REGEX, ana['morphana'])
                            for ana in relevant_anas):
-                    tok.append(wd.lemma)
+                    wd.compound = wd.lemma
                     self.cache[wd.lemma + wd_pos] = ([[]], False)
+                    return_sen.append(list(wd))
                     continue
 
                 compound_analyses = []
@@ -120,9 +169,9 @@ class Compound:
                     comp_lemma = ""
                     boundaries = set()
 
-                    if (morphemes[0]['mtag'] == PREVERB_POSTAG
-                      and not wd.xpostag.startswith(PREVERB_POSTAG)):
-                        tok[self.xpostag_index] = PREVERB_POSTAG + wd.xpostag
+                    if morphemes[0]['mtag'] == PREVERB_POSTAG:
+#                      and not wd.xpostag.startswith(PREVERB_POSTAG)):
+#                        tok[self.xpostag_index] = PREVERB_POSTAG + wd.xpostag
                         preverb_flag = True
 
                     previous_component = ''
@@ -178,21 +227,23 @@ class Compound:
 
                 sorted_boundaries = [sorted(list(comp_ana['boundaries']))
                                      for comp_ana in compound_analyses]
-                tok.append(', '.join(['#'.join(split_at(comp_lemma, sb))
-                                      for sb in sorted_boundaries]))
+                wd.compound = ', '.join(['#'.join(split_at(comp_lemma, sb))
+                                      for sb in sorted_boundaries])
                 self.cache[wd.lemma + wd_pos] =\
                                     (sorted_boundaries, preverb_flag)
 
             # Handle non-compounds
             else:
-                tok.append(wd.lemma)
+                wd.compound = wd.lemma
                 # Úgy sejtem, ezeket nem érdemes cache-elni, mert idáig
                 # gyorsan eljut a futás, de érdemes lehet tesztelni
                 # a memória-sebesség tradeoffot nagy fájlokon, és
                 # ha igen, akkor:
                 # self.cache[wd.lemma + wd_pos] = ([[]], False)
 
-        return sen
+            return_sen.append(list(wd))
+
+        return return_sen
 
     def prepare_fields(self, field_names):
         """
@@ -201,11 +252,11 @@ class Compound:
         :return: the list of the initialised feature classes as required for
                 process_sentence
         """
-        input_column_count = len(field_names) // 2 - len(self.target_fields)
-        input_fields = [field_names[i] for i in range(input_column_count)]
-        Word.features = input_fields
-        self.xpostag_index = field_names['xpostag']
-        return input_fields
+        field_names = {k: v for k, v in field_names.items()
+                                if isinstance(k, str)}
+        Word.features = list(field_names.keys())
+#        self.xpostag_index = field_names['xpostag']
+        return field_names
 
 
 def load_non_compounds(file_name):
@@ -224,10 +275,13 @@ def load_non_compounds(file_name):
 
 
 def get_pos(postag):
+    '''Extract the POS label from the xpostag attribute'''
+
     s = regex.search(f'\[/.+?]', postag)
     if s:
         return s[0]
     return ''
+
 
 def split_at(in_list, indices):
     '''Split in_list at indices into sublists'''
