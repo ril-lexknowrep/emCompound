@@ -40,6 +40,7 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=['xtsv>=1.0.0,<2.0.0',
+                      'regex',
                       ],
     include_package_data=True,
     entry_points={
